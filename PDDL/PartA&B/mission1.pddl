@@ -1,34 +1,27 @@
 (define (problem lunar-mission-1)
     (:domain lunar)
 
-;;these are the specifications for mission1 
+;;these are the specifications for mission 1 
     (:objects 
-        rover1  - rover
-        lander1 - lander
-        wp1 wp2 wp3 wp4 wp5 - waypoint
+        rover1 - rover ;; the rover
+        lander1 - lander ;; the lander
+        wp1 wp2 wp3 wp4 wp5 - waypoint ;; waypoints from figure 2
     )
 
     (:init
-        (lander_at lander1 wp1)  ;; lander lands at wp1
-        (store_empty lander1) ;; The lander's sample store starts empty (room for one sample)
+        (lander_at lander1 wp1)  ;; lander lands at wp1 (wp1 is our choice since start point is not specified)
+        (store_empty lander1) ;; lander 1 has place for one sample
 
-        
-        ;; rover1 belongs to lander1 (it can only deploy from or report to it)
-        (belongs rover1 lander1)
-        ;; rover1 starts aboard the lander, so there is NO (at rover1 ...)
-        ;; fact; the deploy action will place it at wp1.
-        (undeployed rover1)
-        ;; Memory starts empty, so it can take one image or scan.
-        (memory_free rover1)
-        ;; Arms start empty, so it can pick up one sample.
-        (arms_free rover1)
+        ;; the rover
+        (belongs rover1 lander1) ;; rover1 is lander 1's rover
+        (undeployed rover1) ;; rover1 is still inside the lander
+        (memory_free rover1) ;; rover1 can take one image or scan
+        (arms_free rover1) ;; rover1 can carry one sample
 
-        ;; ---- Samples ----
-        ;; There is a sample to collect at wp1.
-        (sample_at wp1)
+        ;; samples on the ground
+        (sample_at wp1) ;; a sample is at wp1
 
-        ;; ---- Roads (Figure 2) ----
-        ;; Every road is ONE-WAY, so each has exactly one connected fact.
+        ;; roads from Figure 2 (each connected fact is one direction)
         (connected wp1 wp2)
         (connected wp2 wp3)
         (connected wp1 wp4)
@@ -37,11 +30,12 @@
         (connected wp5 wp1)
     )
 
-    ;; Mission goals. Taking data is not enough: it must be SENT to the
-    ;; lander, and the sample must be STORED in the lander.
-    (:goal (and
-        (image_sent wp5 lander1)
-        (scan_sent wp3 lander1)
-        (sample_stored wp1 lander1)
-    ))
+    ;; mission goals: data must be sent to the lander and the sample must be stored in it
+    (:goal
+        (and
+            (image_sent wp5 lander1) ;; image of wp5 reaches lander 1
+            (scan_sent wp3 lander1) ;; scan of wp3 reaches lander 1
+            (sample_stored wp1 lander1) ;; sample from wp1 is stored in lander 1
+        )
+    )
 )
