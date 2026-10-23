@@ -150,7 +150,7 @@
             (sample_stored ?w ?l) ;; the goal note is true 
             (not (carrying ?r ?w)) ;; rover no longer has the sample 
             (arms_free ?r)  ;; the arms are free again 
-            ( not(store_empty ?l)) ;; the lander's store is now full 
+            ( not(store_empty ?l)) ;; the lander's store is now
         )
     )
     ;; the astronaut walks from the control room to the docking bay of its own lander 
