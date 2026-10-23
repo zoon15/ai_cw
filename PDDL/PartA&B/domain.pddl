@@ -36,6 +36,7 @@
     )
 
     ;;Actions holds the moves that need to be done 
+    ;;the rover that's undeployed gets placed on the ground at lander’s location
     (:action deploy
         :parameters (?r - rover ?w - waypoint ?l - lander)
         :precondition (and
@@ -48,6 +49,7 @@
             (not (undeployed ?r)) ;; the rover isnt aboard anymore 
         )
     )
+    ;; the rover drives from one waypoint to its connected waypoint 
     (:action move 
         :parameters (?r - rover ?from - waypoint ?to - waypoint )
         :precondition (and
@@ -55,7 +57,7 @@
             (connected ?from ?to) ;; it goes from ?from to ?to 
         )
         :effect (and
-        (at ?r ?to) ;; rover is at the new waypoint 
+            (at ?r ?to) ;; rover is at the new waypoint 
             (not (at ?r ?from)) ;; its not at the old one anymore
         )
     )
@@ -67,8 +69,8 @@
             (memory_free ?r) ;; memory is not full 
         )
         :effect (and
-        (has_image ?r ?w) ;; rover holds the image now  
-        (not (memory_free ?r)) ;; memory is full 
+            (has_image ?r ?w) ;; rover holds the image now  
+            (not (memory_free ?r)) ;; memory is full 
         )
     )
     ;; the rover takes a scan of the waypoint it is at 
@@ -79,8 +81,8 @@
             (memory_free ?r) ;; memory is not full
         )
         :effect (and
-        (has_scan ?r ?w) ;; rover holds the scan now  
-        (not (memory_free ?r)) ;; memory is full 
+            (has_scan ?r ?w) ;; rover holds the scan now  
+            (not (memory_free ?r)) ;; memory is full 
         )
     )
     
@@ -94,7 +96,7 @@
         :effect (and
             (image_sent ?w ?l) ;; goal note is true 
             (not (has_image ?r ?w)) ;; rover doesnt have the image 
-            (memory_free ?r) ;; mempory is free 
+            (memory_free ?r) ;; memory is free 
         )
     )
     ;; the rover sends a scan it holds to its own lander 
@@ -102,7 +104,7 @@
         :parameters (?r - rover ?w - waypoint ?l - lander)
         :precondition (and
             (has_scan ?r ?w) ;; rover should have the scan 
-            (belongs ?r ?l) ;; the scan should belong to the same lander and rover 
+            (belongs ?r ?l) ;; the scan should be rover's own 
         )
         :effect (and
             (scan_sent ?w ?l) ;; goal note is true 
@@ -138,7 +140,7 @@
             (sample_stored ?w ?l) ;; the goal note is true 
             (not (carrying ?r ?w)) ;; rover no longer has the sample 
             (arms_free ?r)  ;; the arms are free again 
-            ( not(store_empty ?l)) ;; the lander's store is now
+            ( not(store_empty ?l)) ;; the lander's store is now full 
         )
     )
     
